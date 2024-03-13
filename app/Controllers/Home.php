@@ -52,6 +52,11 @@ class Home extends BaseController
         echo $this->request->getMethod(true) . ' Berhasil dipanggil';
     }
 
+    public function delete()
+    {
+        echo "Data berhasil dihapus";
+    }
+
     public function redirect()
     {
         return $this->redirect()->to;

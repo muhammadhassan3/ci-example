@@ -26,6 +26,7 @@ $routes->get('/query', [Home::class, 'withQuery']);
 $routes->get('/negotiation', [Home::class, 'negotiation']);
 $routes->get('/put', [Home::class, 'putView']);
 $routes->put('/put', [Home::class, 'put']);
+$routes->delete('/delete', [Home::class, 'delete']);
 
 $routes->get("/render", [Home::class, 'render']);
 
@@ -35,6 +36,7 @@ $routes->get('/api/movies', [Movies::class, 'getAllJson']);
 // $routes->get('/movie', 'Movies::index', ['as' => 'movie']);
 // $routes->get('/movie/create', 'Movies::create');
 // $routes->post('/movie', 'Movies::add');
+// $routes->post('/movie/(:num)', 'Movies::put');
 // $routes->get('/movie/ex', [Movies::class, 'exception']);
 // $routes->get('/movie/(:segment)', [Movies::class, 'show']);
 // $routes->get('/movie/(:segment)/(:num)', [Movies::class, 'show']);
