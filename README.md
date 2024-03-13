@@ -34,6 +34,22 @@ Untuk menentukan port yang digunakan aplikasi, tambahkan argument `--port`
 php spark serve --port 80
 ```
 
+## Arsitektur
+### Alur Proses
+![Arsitektur](image/arch.png)
+
+Proses penanganan *request* pada CodeIgniter4 adalah pertama kali pengguna melakukan *request* maka CodeIgniter akan mengembalikan halaman yang sudah ter-*cache* sebelumnya apabila tersedia. Apabila halaman yang diminta tidak tersedia pada cache, permintaan akan langsung ditangani oleh controller dan mengembalikan view sesuai dengan permintaan pengguna serta melakukan penyimpanan cache apabila dibutuhkan.
+### Architecture Pattern
+![MVC](image/mvc.png)
+
+Pada CodeIgniter menggunakan jenis *Architecture pattern* MVC dimana terdapat komponen Model, View, dan Controller. Berikut beberapa penjelasan dari komponen tersebut.
+#### Model
+Komponen model bertanggung jawab untuk melakukan komunikasi dengan media penyimpanan data, baik memuat data ataupun melakukan manipulasi data.
+#### View
+Komponen view bertanggung jawab untuk menampilkan data atau halaman kepada pengguna. Komponen view ini berisikan baris kode HTML, CSS, Javascript adn sedikit kode PHP.
+#### Controller
+Komponen controller bertanggung jawab untuk melakukan proses pengolahan data sebelum digunakan oleh model, baik melalui proses validasi ataupun error handling. Komponen ini juga bertanggung jawab untuk mengatur laju proses yang dieksekusi.
+
 ## Konfigurasi Dasar
 Konfigurasi dasar dilakukan pada file `.env`
 ### Menentukan Base URL
@@ -68,33 +84,33 @@ Untuk menentukan environment yang akan digunakan, tetapkan nilai pada property `
 ```
 CI_ENVIRONMENT = [development | testing | production]
 ```
-### Routes
+## Routes
 Untuk menentukan route yang digunakan pada aplikasi, letakkan routes pada file `App/Config/Routes.php`. Pada project ini, terdapat beberapa contoh routes.
-#### Get Method
+### Get Method
 Rute ini bertujuan untuk menangani permintaan get yang digunakan browser saat mengakses endpoint. Routes ini akan memanggil fungsi index yang ada pada kelas Movies dan menambahkan alias pada route.
 ```
 $routes->get('/movie', 'Movies::index', ['as' => 'movie']);
 ```
 
-#### Post Method
+### Post Method
 Rute ini bertujuan untuk menangani permintaan POST yang dilakukan browser, method post ini biasanya digunakan untuk melakukan proses penambahan data. Rute berikut ini akan memanggil fungsi add yang ada pada klas Movies.
 ```
 $routes->post('/movie', 'Movies::add');
 ```
 
-#### Put Method
+### Put Method
 Rute ini bertujuan untuk menangani permintaan PUT yang biasanya dilakukan oleh AJAX, REST, ataupun CURL. Hal ini disebabkan karena browser tidak mendukung metode permintaan lain selain GET dan POST. Metode PUT biasanya digunakan untuk melakukan perubahan pada data yang ada pada database. Route ini akan memanggil fungsi put yang ada pada kelas Home.
 ```
 $routes->put('/put', [Home::class, 'put']);
 ```
 
-#### Delete Method
+### Delete Method
 Rute ini bertujuan untuk menangani permintaan DELETE yang biasanya dilakukan oleh AJAX, REST, ataupun CURL. Hal ini disebabkan karena browser tidak mendukung metode permintaan lain selain GET dan POST. Metode DELETE biasanya digunakan untuk melakukan penghapusan data yang ada pada database. Route ini akan memanggil fungsi delete yang ada pada kelas Home.
 ```
 $routes->delete('/delete', [Home::class, 'delete']);
 ```
 
-#### Grouping Route
+### Grouping Route
 Grouping Route dilakukan untuk mengelompokkan route sehingga dapat lebih mudah dibaca dan di-*maintain*. Berikut merupakan pengelompokan route yang ada pada project.
 ```
 $routes->group('movie', static function ($routes) {
@@ -112,7 +128,7 @@ $routes->group('movie', static function ($routes) {
 });
 ```
 
-#### Resources Route
+### Resources Route
 Pendeklarasian ini dilakukan untuk membuat **segala jenis** route yang ada. Pada project ini, terdapat deklarasi resource root.
 ```
 $routes->resource('/api', ['controller' => 'Rest']);
