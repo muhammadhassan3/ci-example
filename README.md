@@ -167,7 +167,7 @@ class MovieModel extends Model
 
 Method `$table` digunakan untuk mendefinisikan nama tabel yang ada pada database. Serta fungsi `getAll()` dengan parameter `$title` yang memiliki default argument `""` berfungsi untuk memuat seluruh data yang ada pada tabel movie.
 
-##View
+## View
 View merupakan komponen yang ebrtanggung jawab dalam menampilkan data kepada pengguna. Komponen view ini biasanya terdapat pada direktori `App\View`. Pada project ini, terdapat beberapa jenis view, serta template yang dapat digunakan secara berulang.
 #### template/header.php
 ```
