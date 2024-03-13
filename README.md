@@ -240,12 +240,10 @@ class Movies extends BaseController
 
     public function __construct()
     {
-        //Initiate object
-        // $this->movieModel = model(MovieModel::class); 
-
         //create new instance or get shared instance
         $this->movieModel = Factories::models('MovieModel');
 
+        //menggunakan helper form untuk memproses data yang dikirimkan
         helper('form');
     }
 
