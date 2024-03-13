@@ -144,3 +144,25 @@ $routes->put('api/(:segment)', 'Rest::update/$1');
 $routes->patch('api/(:segment)', 'Rest::update/$1');
 $routes->delete('api/(:segment)', 'Rest::delete/$1');
 ```
+
+## Model
+Model merupakan sebuah komponen yang akan melakukan proses transaksi dengan media penyimpanan data. Model ini biasanya berkaitan dengan proses *migration* yang dilakukan. Pada project ini terdapat 2 kelas Model, namun hanya 1 yang digunakan yaitu kelas MovieModel. Kelas Model diharusnya untuk menurunkan kelas `CodeIgniter\Model` supaya dapat digunakan dengan baik.
+```
+class MovieModel extends Model
+{
+    protected $table = 'movie';
+
+    protected $allowedFields = ['title', 'description'];
+
+    public function getAll($title = "")
+    {
+        if ($title === '') {
+            return $this->findAll();
+        }
+
+        return $this->where(['title' => $title])->first();
+    }
+}
+```
+
+Method `$table` digunakan untuk mendefinisikan nama tabel yang ada pada database. Serta fungsi `getAll()` dengan parameter `$title` yang memiliki default argument `""` berfungsi untuk memuat seluruh data yang ada pada tabel movie.
