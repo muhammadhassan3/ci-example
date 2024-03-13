@@ -166,3 +166,115 @@ class MovieModel extends Model
 ```
 
 Method `$table` digunakan untuk mendefinisikan nama tabel yang ada pada database. Serta fungsi `getAll()` dengan parameter `$title` yang memiliki default argument `""` berfungsi untuk memuat seluruh data yang ada pada tabel movie.
+
+##View
+View merupakan komponen yang ebrtanggung jawab dalam menampilkan data kepada pengguna. Komponen view ini biasanya terdapat pada direktori `App\View`. Pada project ini, terdapat beberapa jenis view, serta template yang dapat digunakan secara berulang.
+#### template/header.php
+```
+<!doctype html>
+<html>
+<head>
+    <title>CodeIgniter Tutorial</title>
+</head>
+<body>
+    <h1><?= esc($title)?></h1>
+```
+Pada komponen header akan menggunakan dynamic value pada variable `$title` sehingga konten pada komponen view ini dapat berubah-ubah bergantung dengan nilai yang ditetapkannya. 
+
+#### template/footer.php
+```
+    <em>&copy; 2022</em>
+</body>
+</html>
+```
+Pada komponen footer ini akan digunakan untuk menampilkan *copyright* text pada bagian bawah halaman
+#### movies/index.php
+```
+<h2><?= esc($title) ?></h2>
+
+<?php if (! empty($list) && is_array($list)): ?>
+
+    <?php foreach ($list as $item): ?>
+
+        <h3><?= esc($item['title']) ?></h3>
+
+        <div class="main">
+            <?= esc($item['description']) ?>
+        </div>
+        <p><a href="/movie/<?= esc($item['title'], 'url') ?>">View article</a></p>
+
+    <?php endforeach ?>
+
+<?php else: ?>
+
+    <h3>No News</h3>
+
+    <p>Unable to find any news for you.</p>
+
+<?php endif ?>
+```
+
+Pada komponen ini akan digunakan untuk menampilkan data yang ada pada database, menggunakan perulangan untuk melakukan iterasi pada setiap item yang ditetapkan pada controller.
+
+#### Menggunakan View
+Untuk menggunakan komponen view dapat dilihat pada berkas `App\Controllers\Movies.php`
+```
+public function index()
+    {
+        $data['list'] = $this->movieModel->getAll();
+        $data['title'] = 'Movie List';
+        return view('template/header', $data)
+            . view('movies/index')
+            . view('template/footer');
+    }
+```
+
+Pada fungsi `index()` yang ada pada class Movies mengembalikan gambungan dari komponen view header, index, dan footer. Serta menambahkan argument kedua pada pemanggilan fungsi pertama. Argument yang diberikan memiliki tipe data array dengan setiap elemen yang memiliki keyword sama dengan yang ada pada komponen view. Hal ini bertujuan supaya setiap *placeholder* yang ada pada berkas View akan digantikan oleh nilai yang ada didalam array `$data` dengan keyword yang sama.
+
+## Controller
+Kelas Controller bertanggung jawab dalam mengelola dan melakukan processing terhadap permintaan yang masuk. Proses validasi juga dilakukan pada komponen ini sehingga data yang digunakan pada model, merupakan data yang valid. Setiap kelas pada Controller harus melakukan penurunan salah satu kelas BaseController, Resources, atau Controller sehingga dapat dikenali oleh Route. Berikut merupakan contoh kelas controller yang ada pada project ini.
+```
+class Movies extends BaseController
+{
+    private $movieModel;
+
+    public function __construct()
+    {
+        //Initiate object
+        // $this->movieModel = model(MovieModel::class); 
+
+        //create new instance or get shared instance
+        $this->movieModel = Factories::models('MovieModel');
+
+        helper('form');
+    }
+
+    public function add()
+    {
+        $data['title'] = 'Tambahkan data';
+
+        $data = $this->request->getPost(['title', 'description']);
+
+        if (!$this->validateData($data, [
+            'title' => 'required|max_length[50]|min_length[3]',
+            'description' => 'required|min_length[4]'
+        ])) {
+            return $this->create();
+        }
+
+        $post = $this->validator->getValidated();
+
+        $this->movieModel->save([
+            'title' => $post['title'],
+            'description' => $post['description'],
+        ]);
+
+        return view('template/header', ['title' => 'Tambahkan data movie'])
+            . view('movies/sucess')
+            . view('template/footer');
+    }
+}
+
+```
+
+Pada kelas Movies dan method `add()` terdapat proses validasi sebelum menyimpannya pada database menggunakan model saat menangani permintaan POST yang diteruskan Router. Setelah proses selesai dan berhasil akan mengembalikan pesan sukses pada pengguna.
